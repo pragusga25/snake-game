@@ -24,11 +24,22 @@ export default function Game() {
 
   const generateFood = useCallback((): Position => {
     const newFood = {
-      x: Math.floor(Math.random() * GRID_SIZE),
-      y: Math.floor(Math.random() * GRID_SIZE),
+      x: Math.floor(Math.random() * (GRID_SIZE - 2)) + 1,
+      y: Math.floor(Math.random() * (GRID_SIZE - 2)) + 1,
     };
+
+    // Check if the new food position overlaps with the snake
+    const isOnSnake = snake.some(
+      segment => segment.x === newFood.x && segment.y === newFood.y
+    );
+
+    // If food spawns on snake, try again
+    if (isOnSnake) {
+      return generateFood();
+    }
+
     return newFood;
-  }, []);
+  }, [snake]);
 
   const resetGame = useCallback(() => {
     setSnake([{ x: 10, y: 10 }]);
