@@ -8,7 +8,6 @@ import GameOver from './GameOver';
 import Instructions from './Instructions';
 
 const GRID_SIZE = 20;
-const CELL_SIZE = 20;
 const INITIAL_SPEED = 150;
 const SPEED_INCREASE = 5;
 
@@ -30,7 +29,7 @@ export default function Game() {
 
     // Check if the new food position overlaps with the snake
     const isOnSnake = snake.some(
-      segment => segment.x === newFood.x && segment.y === newFood.y
+      (segment) => segment.x === newFood.x && segment.y === newFood.y
     );
 
     // If food spawns on snake, try again
@@ -141,6 +140,23 @@ export default function Game() {
 
       const key = e.key.toLowerCase();
 
+      // Prevent default behavior for game control keys
+      if (
+        [
+          ' ',
+          'arrowup',
+          'arrowdown',
+          'arrowleft',
+          'arrowright',
+          'w',
+          's',
+          'a',
+          'd',
+        ].includes(key)
+      ) {
+        e.preventDefault();
+      }
+
       if (key === ' ') {
         setIsPaused((prev) => !prev);
         return;
@@ -177,12 +193,7 @@ export default function Game() {
       <div className="flex flex-col items-center gap-6">
         <ScoreBoard score={score} highScore={highScore} />
 
-        <GameBoard
-          snake={snake}
-          food={food}
-          gridSize={GRID_SIZE}
-          cellSize={CELL_SIZE}
-        />
+        <GameBoard snake={snake} food={food} gridSize={GRID_SIZE} />
 
         <div className="flex gap-4">
           <button
